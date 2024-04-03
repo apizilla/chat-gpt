@@ -1,0 +1,14 @@
+{
+  "type": "sql-select",
+  "id": "chat-gpt-count-usage",
+  "connection": "db-chat-gpt",
+  "query": "SELECT SUM(token) FROM chat_gpt where created_at > NOW() - interval ':days days'",
+  "resultType": "single",
+  "params": [
+    {
+      "name": "days",
+      "required": true,
+      "defaultValue": 1
+    }
+  ]
+}

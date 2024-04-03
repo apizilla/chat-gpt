@@ -1,0 +1,25 @@
+{
+  "type": "sql-builder",
+  "id": "chat-gpt-select-admin",
+  "connection": "db-chat-gpt",
+  "file": "chat-gpt-query-builder.js",
+  "public": true,
+  "params": [
+    {
+      "name": "search",
+      "required": false
+    },
+    {
+      "name": "processed",
+      "required": false
+    },
+    {
+      "name": "page",
+      "required": true
+    },
+    {
+      "name": "limit",
+      "required": true
+    }
+  ]
+}

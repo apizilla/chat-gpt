@@ -1,0 +1,13 @@
+{
+  "type": "sql-select",
+  "id": "chat-gpt-save-select",
+  "connection": "db-chat-gpt",
+  "query": "SELECT * FROM chat_gpt where id = :id",
+  "resultType": "single",
+  "params": [
+    {
+      "name": "id",
+      "required": true
+    }
+  ]
+}

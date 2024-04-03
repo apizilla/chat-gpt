@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/favicon.ico">
+
+    <title>Apizilla.io chat gpt demo</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style>
+        body {
+            padding-top: 5rem;
+        }
+
+        .starter-template {
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+
+        #chatGptOpenPageWithId {
+            visibility: hidden;
+        }
+
+        #chatGptForm {
+            visibility: hidden;
+            display: none;
+        }
+
+        #chatGptPreview {
+            visibility: hidden;
+            display: none;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<main role="main" class="container">
+
+    <div class="starter-template">
+        <h1>Apizilla.io chat-gpt starter template</h1>
+        <p class="lead">Use this document as a way to quickly start any chat-gpt project.<br>
+            You can access <a href="/login" target="_blank"><b>admin panel</b></a> using (<b>demo/demo</b>) credentials<br />
+            Run <b>.\apizilla generate</b> to create new features
+        </p>
+    </div>
+
+    <div id="chatGptPreview" class="row">
+        <div class="col-12">
+
+            <div class="form-group">
+                <label for="chatGptTextarea">Your chat GPT query</label>
+                <textarea class="form-control" disabled="disabled" id="chatGptTextareaPreview" rows="7"></textarea>
+            </div>
+
+            <p>
+            <pre><code id="chatGptContentPreview">--response is not ready yet--</code></pre>
+            </p>
+
+            <a href="index.html" class="btn btn-success">Go to main page</a>
+        </div>
+    </div>
+
+    <div id="chatGptForm" class="row">
+        <div class="col-12">
+
+            <div class="form-group">
+                <label for="chatGptTextarea">Chat GPT query</label>
+                <textarea class="form-control" id="chatGptTextarea" rows="7"></textarea>
+            </div>
+
+            <div class="form-group">
+                <button id="syncChatGptCall" type="submit" class="btn btn-primary mb-2">Query chat GPT now</button>
+                <button id="asyncChatGptCall" type="submit" class="btn btn-primary mb-2">Add to database and execute via
+                    admin panel
+                </button>
+            </div>
+
+            <p>
+            <pre><code id="chatGptContent">{}</code></pre>
+            </p>
+
+            <div class="form-group">
+                <a id="chatGptOpenPageWithId" href="" type="submit" class="btn btn-info mb-2">Open page containing
+                    results</a>
+            </div>
+        </div>
+    </div>
+
+</main><!-- /.container -->
+
+<script type="application/javascript">
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    if (id !== undefined && id !== null) {
+        initPreview();
+    } else {
+        initForm()
+    }
+
+    function initPreview() {
+        document.getElementById('chatGptPreview').style.visibility = 'visible';
+        document.getElementById('chatGptPreview').style.display = 'block';
+        processPreviewResponse({})
+    }
+
+    function initForm() {
+
+        document.getElementById('chatGptForm').style.visibility = 'visible';
+        document.getElementById('chatGptForm').style.display = 'block';
+
+        document.getElementById("syncChatGptCall").addEventListener("click", (e) => {
+            e.preventDefault();
+            callChatGPT(document.getElementById('chatGptTextarea').value, true)
+        })
+
+        document.getElementById("asyncChatGptCall").addEventListener("click", (e) => {
+            e.preventDefault();
+            callChatGPT(document.getElementById('chatGptTextarea').value, false)
+        })
+    }
+
+    function callChatGPT(query, sync) {
+        fetch(
+            "/api/chat-gpt",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    query: query,
+                    sync: sync,
+                }),
+            }).then((response) => {
+            return new Promise((resolve) => response.json()
+                .then((json) => resolve({
+                    status: response.status,
+                    ok: response.ok,
+                    json,
+                }))
+            );
+        }).then(data => {
+            document.getElementById("chatGptContent").textContent = JSON.stringify(data.json, null, 2)
+            if (data.ok) {
+                console.log(data.json)
+                processResponse(data.json)
+            }
+        }).catch(error => {
+            console.log("err", error)
+            alert("Something went wrong")
+        });
+    }
+
+    function processResponse(response) {
+        document.getElementById('chatGptOpenPageWithId').setAttribute("href", "index.html?id=" + response.publicId)
+        document.getElementById('chatGptOpenPageWithId').style.visibility = 'visible';
+    }
+
+    function fetchRowByPublicId(publicId) {
+        fetch(
+            "/api/chat-gpt/" + publicId,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then((response) => {
+            return new Promise((resolve) => response.json()
+                .then((json) => resolve({
+                    status: response.status,
+                    ok: response.ok,
+                    json,
+                }))
+            );
+        }).then(data => {
+            document.getElementById("chatGptContentPreview").textContent = JSON.stringify(data.json, null, 2)
+            if (data.ok) {
+                console.log(data.json)
+                processPreviewResponse(data.json)
+            }
+        }).catch(error => {
+            console.log("err", error)
+            alert("Something went wrong")
+        });
+    }
+
+    function processPreviewResponse(response) {
+        document.getElementById('chatGptTextareaPreview').value = "test";
+        // document.getElementById('chatGptContentPreview').innerHTML = JSON.stringify(response, null, 2);
+    }
+
+</script>
+
+</body>
+</html>

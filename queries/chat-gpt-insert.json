@@ -1,0 +1,25 @@
+{
+  "type": "sql-insert",
+  "id": "chat-gpt-insert",
+  "connection": "db-chat-gpt",
+  "table": "chat_gpt",
+  "selectAfterInsert": "SELECT * FROM `chat_gpt` where id = :lastInsertId",
+  "public": true,
+  "params": [
+    {
+      "columnName": "created_at",
+      "name": "createdAt",
+      "sqlValue": "now()"
+    },
+    {
+      "columnName": "public_id",
+      "name": "publicId",
+      "required": true
+    },
+    {
+      "columnName": "query",
+      "name": "query",
+      "required": true
+    }
+  ]
+}

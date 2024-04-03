@@ -1,0 +1,12 @@
+{
+  "type": "sql-exec",
+  "id": "chat-gpt-edit-delete",
+  "connection": "db-chat-gpt",
+  "query": "DELETE FROM chat_gpt WHERE id IN(:id)",
+  "params": [
+    {
+      "name": "id",
+      "required": true
+    }
+  ]
+}

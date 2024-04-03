@@ -1,0 +1,41 @@
+{
+  "type": "rest",
+  "id": "chat-gpt-call-http",
+  "connection": "http-open-ai",
+  "path": "/v1/chat/completions",
+  "method": "POST",
+  "body": {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "user",
+        "content": ":prompt :query"
+      }
+    ]
+  },
+  "headers": [
+    {
+      "name": "Authorization",
+      "value": "Bearer :openAiToken"
+    },
+    {
+      "name": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "params": [
+    {
+      "name": "query",
+      "required": true
+    },
+    {
+      "name": "prompt",
+      "required": true
+    },
+    {
+      "name": "openAiToken",
+      "serverValue": "$.config.openAiToken",
+      "required": true
+    }
+  ]
+}

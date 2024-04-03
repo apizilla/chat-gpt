@@ -1,0 +1,25 @@
+{
+  "type": "sql-update",
+  "id": "chat-gpt-update",
+  "connection": "db-chat-gpt",
+  "table": "chat_gpt",
+  "whereCondition": "`id` = :id",
+  "params": [
+    {
+      "name": "id",
+      "required": true
+    },
+    {
+      "name": "executedAt",
+      "column": "executed_at"
+    },
+    {
+      "name": "tokens",
+      "column": "tokens"
+    },
+    {
+      "name": "content",
+      "column": "content"
+    }
+  ]
+}

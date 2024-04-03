@@ -1,0 +1,5 @@
+{
+  "someToken": "12345",
+  "openAiToken": "sk-XXXXXXXXXXXXXXXXXXXXXXX",
+  "mockOpenAiResponse": true
+}

@@ -1,0 +1,17 @@
+{
+  "type": "javascript",
+  "id": "chat-gpt-call-js",
+  "file": "chat-gpt-logic.js",
+  "public": true,
+  "params": [
+    {
+      "name": "query",
+      "required": true
+    },
+    {
+      "name": "sync",
+      "required": true,
+      "defaultValue": false
+    }
+  ]
+}

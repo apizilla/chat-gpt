@@ -1,0 +1,252 @@
+{
+  "id": "chat-gpt-crud",
+  "name": "Chat GPT",
+  "permissions": [
+    "admin"
+  ],
+  "components": [
+    {
+      "type": "input",
+      "id": "search",
+      "default": "",
+      "x": 0,
+      "y": 10,
+      "label": "Search",
+      "onChange": [
+        {
+          "type": "javascript",
+          "javascript": [
+            "appGlobalState.paginationCurrentPage = 1;"
+          ]
+        },
+        {
+          "type": "reload",
+          "component": "resultsTable"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "id": "addButton",
+      "label": "Add",
+      "x": 245,
+      "y": 35,
+      "class": "btn btn-info",
+      "onClick": [
+        {
+          "type": "javascript",
+          "javascript": [
+            "appGlobalState.dataFormVisible = true",
+            "appGlobalState.query = '';",
+            "appGlobalState.modalId = null;"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "id": "editButton",
+      "label": "Edit",
+      "x": 320,
+      "y": 35,
+      "class": "btn btn-success",
+      "btnActive": [
+        "return appGlobalState.resultsTableSelectedRow !== null && appGlobalState.resultsTableSelectedRow.id !== null"
+      ],
+      "onClick": [
+        {
+          "type": "javascript",
+          "javascript": [
+            "appGlobalState.dataFormVisible = true;",
+            "appGlobalState.rowId = appGlobalState.resultsTableSelectedRow !== null ? appGlobalState.resultsTableSelectedRow.id : null;",
+            "appGlobalState.query = appGlobalState.resultsTableSelectedRow !== null ? appGlobalState.resultsTableSelectedRow.query : null;",
+            "appGlobalState.responseContent = appGlobalState.resultsTableSelectedRow !== null ? appGlobalState.resultsTableSelectedRow.content : null;"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "id": "deleteButton",
+      "label": "Delete",
+      "x": 396,
+      "y": 35,
+      "class": "btn btn-danger",
+      "confirmation": "Are you sure?",
+      "btnActive": [
+        "return appGlobalState.resultsTable !== null && ",
+        "appGlobalState.resultsTable.some(row => row.internalFieldRowSelected)"
+      ],
+      "onClick": [
+        {
+          "dataKeyName": "deleteResults",
+          "type": "query",
+          "query": "chat-gpt-edit-delete",
+          "extractResponseData": "return response.data;",
+          "processResponse": [
+            "console.log('deleteResults', appGlobalState.deleteResults, response.data.count)"
+          ],
+          "params": [
+            {
+              "name": "id",
+              "value": "appGlobalState.resultsTable.filter(item =>  item.internalFieldRowSelected).map(item => item.id)"
+            }
+          ]
+        }
+      ],
+      "onClickFinally": [
+        {
+          "type": "reload",
+          "component": "resultsTable"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "id": "resultsTable",
+      "multiSelect": true,
+      "x": 10,
+      "y": 80,
+      "width": 800,
+      "defaultRowsSelector": [
+        "return [];"
+      ],
+      "onInit": [
+        {
+          "type": "query",
+          "query": "chat-gpt-select-admin",
+          "extractResponseData": "return response.data.results;",
+          "processResponse": [
+            "appGlobalState.paginationItemsCount = response.data.count"
+          ],
+          "params": [
+            {
+              "name": "search",
+              "value": "appGlobalState.search"
+            },
+            {
+              "name": "limit",
+              "value": 15
+            },
+            {
+              "name": "page",
+              "value": "appGlobalState.paginationCurrentPage"
+            }
+          ]
+        }
+      ],
+      "onInitSuccess": [
+        {
+          "type": "reload",
+          "component": "pagination"
+        }
+      ],
+      "onRowSelect": [
+        {
+          "type": "javascript",
+          "javascript": [
+            "console.log('running js')"
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "label": "ID",
+          "data": "row.id",
+          "type": "text"
+        },
+        {
+          "label": "Tokens",
+          "data": "{{row.tokens + ' some text'}}",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "pagination",
+      "id": "pagination",
+      "itemsPerPage": 15,
+      "x": 0,
+      "y": 780,
+      "onClick": [
+        {
+          "type": "reload",
+          "component": "resultsTable"
+        }
+      ]
+    },
+    {
+      "type": "modal",
+      "id": "dataForm",
+      "title": "Add / Edit",
+      "width": 800,
+      "height": 800,
+      "components": [
+        {
+          "type": "form",
+          "id": "addEditForm",
+          "x": 10,
+          "y": 0,
+          "width": 550,
+          "height": 550,
+          "components": [
+            {
+              "type": "textarea",
+              "id": "query",
+              "default": "",
+              "label": "Query",
+              "onChange": []
+            },
+            {
+              "type": "textarea",
+              "id": "responseContent",
+              "default": "",
+              "label": "Response",
+              "onChange": []
+            },
+            {
+              "type": "button",
+              "id": "saveButton",
+              "label": "Save",
+              "class": "btn btn-success",
+              "btnActive": [
+                "return true"
+              ],
+              "onClick": [
+                {
+                  "type": "query",
+                  "query": "chat-gpt-save",
+                  "dataKeyName": "saveResults",
+                  "extractResponseData": "return response.data;",
+                  "params": [
+                    {
+                      "name": "id",
+                      "value": "appGlobalState.rowId"
+                    },
+                    {
+                      "name": "chatGptQuery",
+                      "value": "appGlobalState.query"
+                    },
+                    {
+                      "name": "chatGptResponse",
+                      "value": "appGlobalState.responseContent"
+                    }
+                  ],
+                  "processResponse": [
+                    "appGlobalState.dataFormVisible = false"
+                  ]
+                }
+              ],
+              "onClickFinally": [
+                {
+                  "type": "reload",
+                  "component": "resultsTable"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

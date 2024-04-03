@@ -1,0 +1,17 @@
+{
+  "type": "javascript",
+  "id": "chat-gpt-save",
+  "file": "chat-gpt-save.js",
+  "public": true,
+  "params": [
+    {
+      "name": "id",
+      "required": false
+    },
+    {
+      "name": "configId",
+      "serverValue": "$.config.someToken",
+      "required": false
+    }
+  ]
+}

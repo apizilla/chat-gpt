@@ -1,0 +1,5 @@
+{
+  "type": "rest",
+  "id": "http-open-ai",
+  "host": "https://api.openai.com"
+}

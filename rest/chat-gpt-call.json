@@ -1,0 +1,9 @@
+{
+  "path": "/api/chat-gpt",
+  "methods": [
+    "POST",
+    "GET"
+  ],
+  "query": "chat-gpt-call-js",
+  "authorized": false
+}

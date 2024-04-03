@@ -1,0 +1,28 @@
+{
+  "type": "sql-update",
+  "id": "chat-gpt-save-update",
+  "connection": "db-chat-gpt",
+  "table": "chat_gpt",
+  "whereCondition": "`id` = :id",
+  "params": [
+    {
+      "column": "query",
+      "name": "chatGptQuery",
+      "required": false
+    },
+    {
+      "column": "content",
+      "name": "chatGptResponse",
+      "required": false
+    },
+    {
+      "name": "id",
+      "required": true
+    },
+    {
+      "name": "createdAt",
+      "column": "created_at",
+      "sqlValue": "NOW()"
+    }
+  ]
+}
