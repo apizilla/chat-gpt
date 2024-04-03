@@ -1,6 +1,6 @@
 # Installation
 
-- Download binary from [apizilla.io](www.apizilla.io) (windows, windows arm64, linux, linux arm64, macos)
+- Download binary from [apizilla.io](https://www.apizilla.io) (windows, windows arm64, linux, linux arm64, macos)
 - Copy binary into code location
 - Create database from `sql/schema.sql`
 - Update credentials `connections/db-chat-gpt.json` and `config.json`
