@@ -8,3 +8,7 @@
 - Open browser http://localhost:8080
 - Open admin panel http://localhost:8080/login
 - Add additional logic by running `apizilla generate`
+
+# Demo
+
+Demo application can be found [here](https://chat-gpt.apizilla.io/)
