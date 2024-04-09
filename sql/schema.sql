@@ -1,4 +1,4 @@
-create database chat_gpt;
+create database if not exists chat_gpt ;
 use chat_gpt;
 
 CREATE TABLE IF NOT EXISTS `chat_gpt` (
