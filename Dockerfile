@@ -1,4 +1,4 @@
-FROM apizilla/apizilla:v0.5.9
+FROM apizilla/apizilla:v0.5.10
 
 EXPOSE 8080
 ENTRYPOINT [ "apizilla" ]
