@@ -13,7 +13,7 @@ Demo application can be found [here](https://chat-gpt.apizilla.io/)
 # Code generation
 
 ```
-docker run -dit -v "$(PWD):/etc/apizilla" apizilla/apizilla:v0.5.10
+docker run -dit -v "$(PWD):/etc/apizilla" apizilla/apizilla:v0.5.11
 docker ps
 docker exec -it XXXXXXXXX sh
 cd /etc/apizilla
